@@ -39,7 +39,7 @@ fileprivate enum CategoryNews: String {
 
 /// Api Key
 fileprivate enum KeyApi: String {
-    case key = "02d7e692869e4bf5a9a571731cea0d8c"
+    case key = "d6b11eeace37459f80e6e6f8f3660a2e"
 }
 
 // MARK: - Error
