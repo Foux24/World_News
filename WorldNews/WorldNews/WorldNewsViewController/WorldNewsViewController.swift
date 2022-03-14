@@ -124,7 +124,6 @@ private extension WorldNewsViewController {
     func setupTableView() {
         self.worldNewsView.tableView.registerCell(WorldNewsTableViewCell.self)
         self.worldNewsView.tableView.dataSource = self
-        self.worldNewsView.tableView.keyboardDismissMode = .onDrag
         self.worldNewsView.searchBar.delegate = self
     }
     
