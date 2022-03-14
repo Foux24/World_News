@@ -114,6 +114,7 @@ private extension WorldNewsTableViewCell {
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5),
+            collectionView.heightAnchor.constraint(equalToConstant: 350)
         ])
     }
     

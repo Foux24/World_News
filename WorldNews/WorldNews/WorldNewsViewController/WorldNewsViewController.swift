@@ -16,23 +16,19 @@ final class WorldNewsViewController: UIViewController {
     
     /// Выдернем новости из БД
     var newsRealm: Results<NewsRealm>? {
-        realm?.getObject(type: NewsRealm.self)
+        self.realm?.getObject(type: NewsRealm.self)
     }
 
     /// NotificationToken
 	private var token: NotificationToken?
     
     /// Новости в словаре
-    var news = Dictionary<String,[Article]>() {
-        didSet {
-            worldNewsView.tableView.reloadData()
-        }
-    }
+    var news = Dictionary<String,[Article]>()
     
     /// Новости в словаре
     var newsFilter = Dictionary<String,[Article]>() {
         didSet {
-            worldNewsView.tableView.reloadData()
+            self.worldNewsView.tableView.reloadData()
         }
     }
     
@@ -65,10 +61,11 @@ final class WorldNewsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.loadNews()
-        setupTableView()
-        setupNaviController()
-        createNotificationToken()
+        self.viewModel.loadNews()
+        self.viewModel.getDictionaryNews(objects: newsRealm!)
+        self.setupTableView()
+        self.setupNaviController()
+        self.createNotificationToken()
     }
 }
 
@@ -77,36 +74,58 @@ extension WorldNewsViewController: UITableViewDataSource {
     
     /// Кол-во Секций
     func numberOfSections(in tableView: UITableView) -> Int {
-        return newsFilter.count
+        return self.newsFilter.count
     }
     
     /// Кол-во строк в секции
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.defaultCountRow
+        self.viewModel.defaultCountRow
     }
     
     /// Конфигуратор данными для ячейки
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = worldNewsView.tableView.dequeueReusableCell(forIndexPath: indexPath) as WorldNewsTableViewCell
-        let news = news[arrayCotegoryNews[indexPath.section]]
+        let news = newsFilter[arrayCotegoryNews[indexPath.section]]
         cell.configurationCell(news: news ?? [], categoryNews: arrayCotegoryNews[indexPath.section])
         return cell
     }
 }
 
+// MARK: - Extension Delegate
 extension WorldNewsViewController: UITableViewDelegate {
+        
+    /// Выделение ячейки
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.worldNewsView.tableView.deselectRow(at: indexPath, animated: false)
     }
 }
+
+// MARK: - SearchBarDelegate
+extension WorldNewsViewController: UISearchBarDelegate {
+
+    /// Настроим логику SearchBar-а
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.viewModel.serachBarFiltered(searchText: searchText, dictionaryNews: news)
+		DispatchQueue.main.async {
+			self.worldNewsView.tableView.reloadData()
+		}
+    }
+    
+    /// Фильтр по нажатию на кнопку
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.view.endEditing(true)
+    }
+}
+
 // MARK: - Private
 private extension WorldNewsViewController {
     
     /// Настроим TableView
     func setupTableView() {
-        worldNewsView.tableView.registerCell(WorldNewsTableViewCell.self)
-        worldNewsView.tableView.dataSource = self
-        worldNewsView.searchBar.delegate = self
+        self.worldNewsView.tableView.registerCell(WorldNewsTableViewCell.self)
+        self.worldNewsView.tableView.dataSource = self
+        self.worldNewsView.tableView.keyboardDismissMode = .onDrag
+        self.worldNewsView.searchBar.delegate = self
     }
     
     /// Title для нави
@@ -115,20 +134,20 @@ private extension WorldNewsViewController {
     }
 
     /// NotificationToken Realm DB
-	func createNotificationToken() {
-		token = newsRealm?.observe { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-			case .initial(let newsData):
-				print("\(newsData.count) news")
-			case .update(_ ,
-						 deletions: let deletions,
-						 insertions: let insertions ,
-						 modifications: let modifications):
+    func createNotificationToken() {
+        self.token = newsRealm?.observe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .initial(let newsData):
+                print("\(newsData.count) news")
+            case .update(_ ,
+                         deletions: let deletions,
+                         insertions: let insertions ,
+                         modifications: let modifications):
 
-				let deletionsIndexPath = deletions.map { IndexPath(row: $0, section: $0) }
+                let deletionsIndexPath = deletions.map { IndexPath(row: $0, section: $0) }
                 let insertionsIndexPath = insertions.map { IndexPath(row: $0, section: $0) }
-				let modificationsIndexPath = modifications.map { IndexPath(row: $0, section: $0) }
+                let modificationsIndexPath = modifications.map { IndexPath(row: $0, section: $0) }
 
                 self.viewModel.getDictionaryNews(objects: self.newsRealm!)
                 
@@ -147,23 +166,10 @@ private extension WorldNewsViewController {
                         self.worldNewsView.tableView.endUpdates()
                     }
                 }
-			case .error(let error):
-				print("\(error)")
-			}
-		}
-	}
-
-}
-
-// MARK: - SearchBarDelegate
-extension WorldNewsViewController: UISearchBarDelegate {
-
-    /// Настроим логику SearchBar-а
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        viewModel.serachBarFiltered(searchText: searchText, dictionaryNews: news)
-		DispatchQueue.main.async {
-			self.worldNewsView.tableView.reloadData()
-		}
+            case .error(let error):
+                print("\(error)")
+            }
+        }
     }
 }
 

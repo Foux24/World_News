@@ -7,8 +7,8 @@
 
 import Foundation
 import RealmSwift
-// MARK: - Request
 
+// MARK: - Request
 /// Тип новостей
 fileprivate enum TypeMethods: String {
     case friendsGet = "/v2/top-headlines"
@@ -39,11 +39,11 @@ fileprivate enum CategoryNews: String {
 
 /// Api Key
 fileprivate enum KeyApi: String {
-    case key = "7fbc8e0314104fe7abbae37d0da8c8fd"
+    case key = "02d7e692869e4bf5a9a571731cea0d8c"
 }
 
 // MARK: - Error
-// создадим енум с возможными ошибками
+/// Енум с возможными ошибками
 enum FriendsError: Error {
     case parseError
     case requestError(Error)
@@ -53,20 +53,20 @@ enum FriendsError: Error {
 // MARK: - Основа для запроса на сервер
 final class RequestServer {
     
-    // Определим сессию с конфигуратором
+    /// Определим сессию с конфигуратором
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         let session = URLSession(configuration: config)
         return session
     }()
     
-    // Протокол запроса
+    /// Протокол запроса
     private let scheme = "https"
     
-    // Адресс сервера
+    /// Адресс сервера
     private let host = "newsapi.org"
     
-    // Вид Декодера
+    /// Декодер
     private let decoder = JSONDecoder()
     
     // MARK: - Запрос на сервер
@@ -239,6 +239,7 @@ final class RequestServer {
 
 private extension RequestServer {
 
+    /// Метод для работы с БД реалм
 	func updateNews(news: [NewsRealm]) {
         do {
             let realm = try Realm()

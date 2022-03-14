@@ -78,7 +78,7 @@ private extension WorldNewsNewsImage {
     
     /// Градиент Вью на Картинку новости
     func addViewGradient() -> UIView {
-        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 300))
+        let view: UIView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 350))
         let gradientLayer: CAGradientLayer = CAGradientLayer()
         gradientLayer.frame = view.bounds
         let topColor: CGColor = UIColor.clear.cgColor

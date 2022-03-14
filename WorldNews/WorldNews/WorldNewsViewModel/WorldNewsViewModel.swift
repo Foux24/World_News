@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-/// Протокол для данных новостей
+/// Протокол для работы с новостями получение, фильтрации
 protocol WorldNewsViewModelInput {
     var newsFilter: Dictionary<String,[Article]> { get set }
     var news: Dictionary<String,[Article]> { get set }
@@ -16,7 +16,7 @@ protocol WorldNewsViewModelInput {
     
 }
 
-/// Протокол для обращения к ViewModel
+/// Протокол общения  ViewModel с Controller
 protocol WorldNewsViewModelOutput {
     var defaultCountRow: Int { get set }
     func loadNews() -> Void
@@ -128,11 +128,38 @@ final class WorldNewsViewModel: WorldNewsViewModelOutput {
 		}
     }
     
-    /// Фильтрация друзей в SearchBar
+    /// Фильтрация новосте в SearchBar
     func serachBarFiltered(searchText: String, dictionaryNews: Dictionary<String,[Article]>) -> Void {
         self.controller?.newsFilter = [:]
+        let filterNews = dictionaryNews
         if searchText == "" {
             controller?.newsFilter = dictionaryNews
+            controller?.arrayCotegoryNews = dictionaryNews.keys.sorted()
+        } else {
+            var dic = Dictionary<String,[Article]>()
+            _ = filterNews.map { news in
+                let category = news.key
+                let arrayArctaicle = news.value
+                var arrayTitle = [Article]()
+                if category.lowercased().contains(searchText.lowercased()) {
+                    dic[category] = arrayArctaicle
+                } else {
+                    _ = arrayArctaicle.map { article in
+                        if article.title?.lowercased().contains(searchText.lowercased()) == true {
+                            arrayTitle.append(article)
+                        }
+                    }
+                    dic[category] = arrayTitle
+                }
+            }
+            var filterDict = Dictionary<String,[Article]>()
+            for (key, value) in dic {
+                if key.isEmpty == false && value.isEmpty == false {
+                    filterDict[key] = value
+                }
+            }
+            self.controller?.newsFilter = filterDict
+            self.controller?.arrayCotegoryNews = filterDict.keys.sorted()
         }
     }
 }

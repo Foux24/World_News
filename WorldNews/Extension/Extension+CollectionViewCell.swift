@@ -9,6 +9,7 @@ import UIKit
 
 protocol Reusable{}
 
+/// Расширение для ячейки таблицы для ее регистрации
 extension UITableViewCell: Reusable {}
 
 extension Reusable where Self: UITableViewCell {

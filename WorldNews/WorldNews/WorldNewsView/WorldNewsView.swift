@@ -25,7 +25,6 @@ final class WorldNewsView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
-        tableView.rowHeight = 350
         return tableView
     }()
     
@@ -34,12 +33,11 @@ final class WorldNewsView: UIView {
         super.init(frame: frame)
         self.setupUI()
         self.setupConstreints()
+        self.tapScreen()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setupUI()
-        self.setupConstreints()
     }
 }
 
@@ -65,5 +63,17 @@ private extension WorldNewsView {
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
+    }
+    
+    /// добавим тап по экрану для скрытия клавы
+    func tapScreen() {
+        let tapScreen = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapScreen.cancelsTouchesInView = false
+        self.addGestureRecognizer(tapScreen)
+    }
+    
+    /// Убираем клаву
+    @objc func dismissKeyboard() {
+        self.endEditing(true)
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 
+// MARK: - WorldNewsCollectionViewCell
 final class WorldNewsCollectionViewCell: UICollectionViewCell {
     
     /// Ключ для регистрации ячкйки
@@ -34,7 +35,7 @@ final class WorldNewsCollectionViewCell: UICollectionViewCell {
     func configureImage(with image: UIImage?, textTitle: String) {
         guard let imageDefault = UIImage(systemName: "newspaper") else { return }
         photoView.image = image ?? imageDefault
-        titleNewsLable.text = textTitle
+        titleNewsLable.text = "\(textTitle.prefix(100))"
         setupUIImage()
         setupConstraints()
     }

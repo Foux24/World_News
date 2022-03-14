@@ -17,6 +17,7 @@ class NewsRealm: Object {
     /// Список новостей
     var listNews = List<Article>()
     
+    /// Прймори кей
     override static func primaryKey() -> String? {
         "category"
     }

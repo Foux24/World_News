@@ -7,6 +7,7 @@
 
 import UIKit
 
+/// Расширение ячейки коллекции для ее регистрации
 extension UICollectionViewCell: Reusable {}
 
 extension Reusable where Self: UICollectionViewCell {
