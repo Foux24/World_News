@@ -36,7 +36,7 @@ final class WorldNewsViewController: UIViewController {
     var arrayCotegoryNews = [String]()
     
     /// Вью Модель
-    var viewModel: WorldNewsViewModelOutput
+    private var viewModel: WorldNewsViewModelOutput
     
     /// Инициализтор
     init(viewModel: WorldNewsViewModelOutput) {
@@ -158,7 +158,7 @@ private extension WorldNewsViewController {
 
                         self.worldNewsView.tableView.deleteRows(at: deletionsIndexPath, with: .automatic)
                         
-                        self.worldNewsView.tableView.insertRows(at: insertionsIndexPath, with: .automatic) // <- ошибка при попытке вставить строку
+                        self.worldNewsView.tableView.insertRows(at: insertionsIndexPath, with: .automatic)
                         
                         self.worldNewsView.tableView.reloadRows(at: modificationsIndexPath, with: .automatic)
 
